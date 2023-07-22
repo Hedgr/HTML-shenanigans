@@ -1,63 +1,46 @@
-import random
+import neocities
+
 
 true = True
 false = False
-debug = false
 
-in_str = ""
-out_str = ""
+mainKey = "11e8eaefafb7b3bf8cf5e2b967a481fe"
+subKey = "7a7fea559ddb77954b585e5390512b9f"
 
-charstring = "`1234567890-=~!@#$%^&*()_+qwertyuiop[]\\QWERTYUIOP{}|asdfghjkl;'ASDFGHJKL:\"zxcvbnm,./ZXCVBNM<>?"
-keyList = []
+nc = neocities.NeoCities(api_key=subKey)
 
+mainProjectPath = "C:\\Users\\hedgr\\Downloads\\neocities main site\\"
+altProjectPath = "C:\\Users\\hedgr\\Downloads\\neocities alt site\\"
 
-# above is 94 chars long
+def uploadTo(path, file):
+    print("uploadTo()")
+    nc.upload((path+file, file))
 
-# assumption is that key transfer is 100% secure
+def uploadToMain(file):
+    # function takes one file and uploads it from C:\Users\hedgr\Downloads\neocities main site\[file].[extension]
+    print("uploadToMain()")
+    uploadTo(mainProjectPath,file)
 
+def uploadToAlt(file):
+    print("uploadToAlt()")
+    uploadTo(altProjectPath, file)
 
-def getCharIndex(character):
-    for i in range(len(charstring)):
-        if character == charstring[i]:
-            return i
-    print("somethings wrong with getCharIndex()")
+def mainUpdate(*toUpload):
+    print("mainUpdate()")
+    uploadToMain("index.html")
+    uploadToMain("style.css")
+    if len(toUpload) != 0:
+        for i in range(len(toUpload)):
+            uploadToMain(toUpload[i])
 
-
-def shuffleCharIndex():
-    pass
-
-
-def encrypt(string_in):
-    out = []
-    for i in range(len(string_in)):
-        randByte = random.getrandbits(8)
-        keyList.append(randByte)
-        to_ret = getCharIndex(string_in[i]) ^ randByte
-        out.append(to_ret)
-    return out
-
-
-def decrypt(string_in):
-    out = ""
-    for i in range(len(string_in)):
-        key = keyList[i]
-        toDecrypt = string_in[i]
-        toRet = toDecrypt ^ key
-        out = out + str(charstring[toRet])
-    return out
+def altUpdate(*toUpload):
+    print("altUpdate()")
+    uploadToAlt("index.html")
+    uploadToAlt("style.css")
+    if len(toUpload) != 0:
+        for i in range(len(toUpload)):
+            uploadToAlt(toUpload[i])
 
 
-def report(string):
-    to_encrypt = str(string)
-    encrypted = encrypt(to_encrypt)
-    decrypted = decrypt(encrypted)
 
-    print("start txt: " + str(to_encrypt))
-    print("encrypted: " + str(encrypted))
-    print("keys list: " + str(keyList))
-    print("decrypted: " + str(decrypted))
-
-
-while true:
-    keyList = []
-    report(input("input to be encrypted:\n"))
+altUpdate()
